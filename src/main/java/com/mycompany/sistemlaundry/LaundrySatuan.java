@@ -15,9 +15,9 @@ public class LaundrySatuan extends Laundry {
 
     public LaundrySatuan(String namaPelanggan, String noTelepon, double beratKg, String status, String jenisBarang, int jumlahBarang, double hargaPerItem) {
         super(namaPelanggan, noTelepon, beratKg, status);
-        setJenisBarang(jenisBarang);
-        setJumlahBarang(jumlahBarang);
-        setHargaPerItem(hargaPerItem);
+        this.jenisBarang = jenisBarang;
+        this.jumlahBarang = jumlahBarang;
+        this.hargaPerItem = hargaPerItem;
     }
 
     public String getJenisBarang() {
@@ -28,7 +28,7 @@ public class LaundrySatuan extends Laundry {
         if (jenisBarang != null && !jenisBarang.trim().isEmpty()) {
             this.jenisBarang = jenisBarang.trim();
         } else {
-            throw new IllegalArgumentException("Jenis barang tidak boleh kosong.");
+            System.out.println("Jenis barang tidak boleh kosong.");
         }
     }
 
@@ -40,7 +40,7 @@ public class LaundrySatuan extends Laundry {
         if (jumlahBarang > 0) {
             this.jumlahBarang = jumlahBarang;
         } else {
-            throw new IllegalArgumentException("Jumlah barang harus lebih dari 0.");
+            System.out.println("Jumlah barang harus lebih dari 0.");
         }
     }
 
@@ -52,7 +52,7 @@ public class LaundrySatuan extends Laundry {
         if (hargaPerItem > 0) {
             this.hargaPerItem = hargaPerItem;
         } else {
-            throw new IllegalArgumentException("Harga per item harus lebih dari 0.");
+            System.out.println("Harga per item harus lebih dari 0.");
         }
     }
 
