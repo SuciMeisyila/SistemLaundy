@@ -8,7 +8,7 @@ package com.mycompany.sistemlaundry;
  *
  * @author ASUS
  */
-public class LaundryDryCleaning extends Laundry {
+public class LaundryDryCleaning extends Laundry implements DapatDiantar{
     private String jenisPakaian;
     private double hargaLayanan;
 
@@ -56,5 +56,15 @@ public class LaundryDryCleaning extends Laundry {
     @Override
     public void aksiLaundry() {
         System.out.println("-> Aksi Dry Cleaning: pakaian dibersihkan dengan metode dry cleaning, dikeringkan, dan dicek kembali.");
+    }
+    
+    @Override
+    public void hitungEstimasiSelesai() {
+        System.out.println("-> [ESTIMASI] Dry cleaning selesai dalam 4 hari.");
+    }
+    
+    @Override
+    public void prosesAntar() {
+        System.out.println("-> [ANTAR] Pakaian dry cleaning dibungkus plastik khusus lalu diantar ke pelanggan.");
     }
 }

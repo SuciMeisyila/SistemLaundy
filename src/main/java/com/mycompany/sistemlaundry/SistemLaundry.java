@@ -33,6 +33,22 @@ public class SistemLaundry {
     public static void prosesLaundry(Laundry item) {
         item.aksiLaundry();
     }
+    
+    public static void jalankanAksiInterface(Laundry item, int bintang) {
+        if (item instanceof DapatDiantar) {
+            DapatDiantar layananAntar = (DapatDiantar) item;
+            layananAntar.prosesAntar();
+        } else {
+            System.out.println("-> [INFO] Layanan ini tidak mendukung antar (ambil di outlet).");
+        }
+
+        if (item instanceof DapatDinilai) {
+            DapatDinilai layananNilai = (DapatDinilai) item;
+            layananNilai.beriRating(bintang);
+        } else {
+            System.out.println("-> [INFO] Layanan ini belum bisa diberi rating.");
+        }
+    }
 
     public static void main(String[] args) {
         try (Scanner scanner = new Scanner(System.in)) {
@@ -52,9 +68,17 @@ public class SistemLaundry {
                     "Citra", "083456789012", 2.0,
                     "Diproses", "Dry Cleaning", 30000);
             
-                    System.out.println("==============================================================");
-                    System.out.println("             SISTEM MANAJEMEN LAUNDRY                        ");
-                    System.out.println("==============================================================");
+            daftarLaundry[jumlahLaundry++] = new LaundryKiloan(
+                    "Dewi", "084567890123", 5.0,
+                    "Diambil", "Express", 10000);
+
+            daftarLaundry[jumlahLaundry++] = new LaundrySatuan(
+                    "Eko", "085678901234", 1.0,
+                    "Diproses", "Selimut", 2, 20000);
+            
+            System.out.println("==============================================================");
+            System.out.println("             SISTEM MANAJEMEN LAUNDRY                        ");
+            System.out.println("==============================================================");
 
             while (isRunning) {
                 System.out.println("\n----------------------- MENU UTAMA ---------------------------");
@@ -62,7 +86,8 @@ public class SistemLaundry {
                 System.out.println("2. Tampilkan Seluruh Data");
                 System.out.println("3. Pencarian / Aksi Khusus");
                 System.out.println("4. Simulasi Proses");
-                System.out.println("5. Keluar");
+                System.out.println("5. Aksi Interface (ANtar & Rating)");
+                System.out.println("6. Keluar");
                 System.out.println("--------------------------------------------------------------");
                 System.out.print("Pilih Menu: 1-5: ");
 
@@ -129,7 +154,7 @@ public class SistemLaundry {
 
                             } else if (jenis == 3) {
                                 System.out.print("Jenis Pakaian: ");
-                                String jennisPakaian = scanner.nextLine();
+                                String jenisPakaian = scanner.nextLine();
 
                                 System.out.print("Jenis Layanan (Reguler/Express): ");
                                 String layanan = scanner.nextLine();
@@ -158,6 +183,20 @@ public class SistemLaundry {
                                 System.out.print((i + 1) + ". ");
                                 daftarLaundry[i].tampilkanInfo();
                                 daftarLaundry[i].aksiLaundry();
+                                daftarLaundry[i].hitungEstimasiSelesai();
+
+                                if (daftarLaundry[i] instanceof DapatDiantar) {
+                                    DapatDiantar itemAntar = (DapatDiantar) daftarLaundry[i];
+                                    itemAntar.prosesAntar();
+                                }
+                                if (daftarLaundry[i] instanceof DapatDinilai) {
+                                    DapatDinilai itemBisaDinilai = (DapatDinilai) daftarLaundry[i];
+                                if (itemBisaDinilai.getRating() == 0) {
+                                    System.out.println("-> [RATING] Belum ada rating dari pelanggan.");
+                                } else {
+                                    System.out.println("-> [RATING] Rating pelanggan: " + itemBisaDinilai.getRating() + "/5 Bintang.");
+                                }
+                            }
                                 System.out.println();
                             }
                             System.out.println( "----------------------------------------------------------");
@@ -213,11 +252,51 @@ public class SistemLaundry {
                         }
                     }
                     
-                    case 5 -> {
+                                        case 5 -> {
+                        System.out.println("\n--- Aksi Interface: Antar & Rating ---");
+                        if (jumlahLaundry == 0) {
+                            System.out.println("Belum ada data laundry yang tersimpan.");
+                        } else {
+                            System.out.print("Masukkan nama pelanggan: ");
+                            String namaCari = scanner.nextLine().trim();
+
+                            boolean ditemukan = false;
+                            for (int i = 0; i < jumlahLaundry; i++) {
+                                if (daftarLaundry[i].getNamaPelanggan().equalsIgnoreCase(namaCari)) {
+                                    ditemukan = true;
+                                    System.out.println("Data ditemukan: " + daftarLaundry[i].getNamaPelanggan()
+                                            + " (" + daftarLaundry[i].getClass().getSimpleName() + ")");
+
+                                    int bintang = 0;
+                                    boolean ratingValid = false;
+                                    while (!ratingValid) {
+                                        System.out.print("Masukkan rating (1-5): ");
+                                        try {
+                                            bintang = Integer.parseInt(scanner.nextLine().trim());
+                                            if (bintang >= 1 && bintang <= 5) {
+                                                ratingValid = true;
+                                            } else {
+                                                System.out.println("Rating harus 1-5.");
+                                            }
+                                        } catch (NumberFormatException e) {
+                                            System.out.println("Rating harus berupa angka.");
+                                        }
+                                    }
+
+                                    jalankanAksiInterface(daftarLaundry[i], bintang);
+                                }
+                            }
+
+                            if (!ditemukan) {
+                                System.out.println("Data laundry dengan nama \"" + namaCari + "\" tidak ditemukan.");
+                            }
+                        }
+                    }
+                    
+                    case 6 -> {
                     System.out.println(
                                 "Terima kasih telah menggunakan Sistem Laundry!");
-
-                        isRunning = false;
+                    isRunning = false;
                     }
 
                     default -> {

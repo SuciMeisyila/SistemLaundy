@@ -93,4 +93,8 @@ public class Laundry {
     public void aksiLaundry() {
         System.out.println("-> Pesanan sedang diproses oleh petugas laundry.");
     }
+
+    void hitungEstimasiSelesai() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

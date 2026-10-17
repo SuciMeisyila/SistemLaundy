@@ -8,9 +8,10 @@ package com.mycompany.sistemlaundry;
  *
  * @author ASUS
  */
-public class LaundryKiloan extends Laundry {
+public class LaundryKiloan extends Laundry implements DapatDiantar, DapatDinilai {
     private String jenisLayanan;
     private double hargaPerKg;
+    private int rating = 0;
 
     public LaundryKiloan(String namaPelanggan, String noTelepon, double beratKg, String status, String jenisLayanan, double hargaPerKg) {
         super(namaPelanggan, noTelepon, beratKg, status);
@@ -56,5 +57,26 @@ public class LaundryKiloan extends Laundry {
     @Override
     public void aksiLaundry() {
         System.out.println("-> Aksi: Cucian kiloan ditimbang, dicuci, dikeringkan, lalu dilipat.");
+    }
+
+    @Override
+    public void hitungEstimasiSelesai() {
+        System.out.println("-> [ESTIMASI] Laundry kiloan selesai dalam 2 hari (Express: 1 hari).");
+    }
+
+    @Override
+    public void prosesAntar() {
+        System.out.println("-> [ANTAR] Cucian kiloan dikemas dan diantar kurir ke alamat pelanggan.");
+    }
+
+    @Override
+    public void beriRating(int bintang) {
+        this.rating = bintang;
+        System.out.println("-> [ULASAN KILOAN] Layanan kiloan mendapat rating " + bintang + "/5 Bintang.");
+    }
+    
+    @Override
+    public int getRating() {
+        return this.rating;
     }
 }
