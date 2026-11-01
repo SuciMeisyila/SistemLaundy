@@ -13,21 +13,21 @@ public class LaundryKiloan extends Laundry implements DapatDiantar, DapatDinilai
     private double hargaPerKg;
     private int rating = 0;
 
-    public LaundryKiloan(String namaPelanggan, String noTelepon, double beratKg, String status, String jenisLayanan, double hargaPerKg) {
+    public LaundryKiloan(String namaPelanggan, String noTelepon, double beratKg, String status, String jenisLayanan, double hargaPerKg) throws DataTidakValidException {
         super(namaPelanggan, noTelepon, beratKg, status);
-        this.jenisLayanan = jenisLayanan;
-        this.hargaPerKg = hargaPerKg;
+        setJenisLayanan(jenisLayanan);
+        setHargaPerKg(hargaPerKg);
     }
 
     public String getJenisLayanan() {
         return this.jenisLayanan;
     }
 
-    public void setJenisLayanan(String jenisLayanan) {
+    public void setJenisLayanan(String jenisLayanan) throws DataTidakValidException {
         if (jenisLayanan != null && !jenisLayanan.trim().isEmpty()) {
             this.jenisLayanan = jenisLayanan.trim();
         } else {
-            System.out.println("Jenis layanan tidak boleh kosong.");
+            throw new DataTidakValidException("Jenis layanan tidak boleh kosong.");
         }
     }
 
@@ -35,11 +35,11 @@ public class LaundryKiloan extends Laundry implements DapatDiantar, DapatDinilai
         return this.hargaPerKg;
     }
 
-    public void setHargaPerKg(double hargaPerKg) {
+    public void setHargaPerKg(double hargaPerKg) throws DataTidakValidException {
         if (hargaPerKg > 0) {
             this.hargaPerKg = hargaPerKg;
         } else {
-            System.out.println("Harga per kg harus lebih dari 0.");
+            throw new DataTidakValidException("Harga per kg harus lebih dari 0.");
         }
     }
 

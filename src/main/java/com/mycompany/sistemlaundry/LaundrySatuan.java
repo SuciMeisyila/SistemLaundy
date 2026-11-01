@@ -14,22 +14,22 @@ public class LaundrySatuan extends Laundry implements DapatDinilai {
     private double hargaPerItem;
     private int rating = 0;
 
-    public LaundrySatuan(String namaPelanggan, String noTelepon, double beratKg, String status, String jenisBarang, int jumlahBarang, double hargaPerItem) {
+    public LaundrySatuan(String namaPelanggan, String noTelepon, double beratKg, String status, String jenisBarang, int jumlahBarang, double hargaPerItem) throws DataTidakValidException {
         super(namaPelanggan, noTelepon, beratKg, status);
-        this.jenisBarang = jenisBarang;
-        this.jumlahBarang = jumlahBarang;
-        this.hargaPerItem = hargaPerItem;
+        setJenisBarang(jenisBarang);
+        setJumlahBarang(jumlahBarang);
+        setHargaPerItem(hargaPerItem);
     }
 
     public String getJenisBarang() {
         return this.jenisBarang;
     }
 
-    public void setJenisBarang(String jenisBarang) {
+    public void setJenisBarang(String jenisBarang) throws DataTidakValidException {
         if (jenisBarang != null && !jenisBarang.trim().isEmpty()) {
             this.jenisBarang = jenisBarang.trim();
         } else {
-            System.out.println("Jenis barang tidak boleh kosong.");
+            throw new DataTidakValidException("Jenis barang tidak boleh kosong.");
         }
     }
 
@@ -37,11 +37,11 @@ public class LaundrySatuan extends Laundry implements DapatDinilai {
         return this.jumlahBarang;
     }
 
-    public void setJumlahBarang(int jumlahBarang) {
+    public void setJumlahBarang(int jumlahBarang) throws DataTidakValidException {
         if (jumlahBarang > 0) {
             this.jumlahBarang = jumlahBarang;
         } else {
-            System.out.println("Jumlah barang harus lebih dari 0.");
+            throw new DataTidakValidException("Jumlah barang harus lebih dari 0.");
         }
     }
 
@@ -49,11 +49,11 @@ public class LaundrySatuan extends Laundry implements DapatDinilai {
         return this.hargaPerItem;
     }
 
-    public void setHargaPerItem(double hargaPerItem) {
+    public void setHargaPerItem(double hargaPerItem) throws DataTidakValidException {
         if (hargaPerItem > 0) {
             this.hargaPerItem = hargaPerItem;
         } else {
-            System.out.println("Harga per item harus lebih dari 0.");
+            throw new DataTidakValidException("Harga per item harus lebih dari 0.");
         }
     }
 

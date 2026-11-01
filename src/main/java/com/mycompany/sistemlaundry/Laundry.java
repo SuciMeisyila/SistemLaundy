@@ -8,7 +8,7 @@ package com.mycompany.sistemlaundry;
  *
  * @author ASUS
  */
-public class Laundry {
+public abstract class Laundry {
     private String namaPelanggan;
     private String noTelepon;
     private double beratKg;
@@ -16,7 +16,7 @@ public class Laundry {
 
     private static int totalLaundryBerhasilDibuat = 0;
 
-    public Laundry(String namaPelanggan, String noTelepon, double beratKg, String status) {
+    public Laundry(String namaPelanggan, String noTelepon, double beratKg, String status) throws DataTidakValidException {
         setNamaPelanggan(namaPelanggan);
         setNoTelepon(noTelepon);
         setBeratKg(beratKg);
@@ -28,11 +28,11 @@ public class Laundry {
         return this.namaPelanggan;
     }
 
-    public void setNamaPelanggan(String namaPelanggan) {
+    public void setNamaPelanggan(String namaPelanggan) throws DataTidakValidException {
         if (namaPelanggan != null && !namaPelanggan.trim().isEmpty()) {
             this.namaPelanggan = namaPelanggan.trim();
         } else {
-            throw new IllegalArgumentException("Nama pelanggan tidak boleh kosong.");
+            throw new DataTidakValidException("Nama pelanggan tidak boleh kosong.");
         }
     }
 
@@ -40,11 +40,11 @@ public class Laundry {
         return this.noTelepon;
     }
 
-    public void setNoTelepon(String noTelepon) {
+    public void setNoTelepon(String noTelepon) throws DataTidakValidException {
         if (noTelepon != null && noTelepon.matches("\\d{10,13}")) {
             this.noTelepon = noTelepon;
         } else {
-            throw new IllegalArgumentException("Nomor telepon harus 10-13 digit.");
+            throw new DataTidakValidException("Nomor telepon harus 10-13 digit angka.");
         }
     }
 
@@ -52,11 +52,11 @@ public class Laundry {
         return this.beratKg;
     }
 
-    public void setBeratKg(double beratKg) {
+    public void setBeratKg(double beratKg) throws DataTidakValidException {
         if (beratKg >= 0) {
             this.beratKg = beratKg;
         } else {
-            throw new IllegalArgumentException("Berat laundry harus lebih dari 0 kg.");
+            throw new DataTidakValidException("Berat laundry tidak boleh bernilai negatif.");
         }
     }
 
@@ -64,14 +64,13 @@ public class Laundry {
         return this.status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(String status) throws DataTidakValidException {
         if (status != null && (status.equalsIgnoreCase("Diproses")
                 || status.equalsIgnoreCase("Selesai")
                 || status.equalsIgnoreCase("Diambil"))) {
             this.status = normalisasiStatus(status);
         } else {
-            throw new IllegalArgumentException(
-                    "Status hanya boleh: Diproses, Selesai, atau Diambil.");
+            throw new DataTidakValidException("Status hanya boleh: Diproses, Selesai, atau Diambil.");
         }
     }
 
@@ -94,7 +93,5 @@ public class Laundry {
         System.out.println("-> Pesanan sedang diproses oleh petugas laundry.");
     }
 
-    void hitungEstimasiSelesai() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    public abstract void hitungEstimasiSelesai();
 }

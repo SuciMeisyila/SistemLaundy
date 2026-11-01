@@ -4,29 +4,25 @@
  */
 package com.mycompany.sistemlaundry;
 
-/**
- *
- * @author ASUS
- */
-public class LaundryDryCleaning extends Laundry implements DapatDiantar{
+public class LaundryDryCleaning extends Laundry implements DapatDiantar {
     private String jenisPakaian;
     private double hargaLayanan;
 
-    public LaundryDryCleaning(String namaPelanggan, String noTelepon, double beratKg, String status, String jenisPakaian, double hargaLayanan) {
+    public LaundryDryCleaning(String namaPelanggan, String noTelepon, double beratKg, String status, String jenisPakaian, double hargaLayanan) throws DataTidakValidException {
         super(namaPelanggan, noTelepon, beratKg, status);
-        this.jenisPakaian = jenisPakaian;
-        this.hargaLayanan = hargaLayanan;
+        setJenisPakaian(jenisPakaian);
+        setHargaLayanan(hargaLayanan);
     }
 
     public String getJenisPakaian() {
         return this.jenisPakaian;
     }
 
-    public void setJenisPakaian(String jenisPakaian) {
+    public void setJenisPakaian(String jenisPakaian) throws DataTidakValidException {
         if (jenisPakaian != null && !jenisPakaian.trim().isEmpty()) {
             this.jenisPakaian = jenisPakaian.trim();
         } else {
-            System.out.println("Jenis pakaian tidak boleh kosong.");
+            throw new DataTidakValidException("Jenis pakaian tidak boleh kosong.");
         }
     }
 
@@ -34,11 +30,11 @@ public class LaundryDryCleaning extends Laundry implements DapatDiantar{
         return this.hargaLayanan;
     }
 
-    public void setHargaLayanan(double hargaLayanan) {
+    public void setHargaLayanan(double hargaLayanan) throws DataTidakValidException {
         if (hargaLayanan > 0) {
             this.hargaLayanan = hargaLayanan;
         } else {
-            System.out.println("Harga layanan harus lebih dari 0.");
+            throw new DataTidakValidException("Harga layanan harus lebih dari 0.");
         }
     }
 
