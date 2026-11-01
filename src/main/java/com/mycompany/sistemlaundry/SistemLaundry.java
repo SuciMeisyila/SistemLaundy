@@ -250,7 +250,7 @@ public class SistemLaundry {
                         System.out.print("Pilih: ");
 
                         int menuPelanggan = scanner.nextInt();
-                        scanner.nextLine(); // membersihkan buffer
+                        scanner.nextLine();
 
                         if (menuPelanggan == 1) {
                             System.out.print("Masukkan ID (sebagai key): ");
