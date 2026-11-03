@@ -1,45 +1,9 @@
 package com.mycompany.sistemlaundry;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class SistemLaundry {
-
-    public static void cariLaundry(String nama, ArrayList<Laundry> daftarLaundry) throws DataTidakValidException {
-        if (nama == null || nama.trim().isEmpty()) {
-            throw new DataTidakValidException("Kata kunci pencarian nama tidak boleh kosong.");
-        }
-        System.out.println("Mencari laundry dengan Nama Pelanggan: " + nama);
-        boolean ditemukan = false;
-        for (int i = 0; i < daftarLaundry.size(); i++) {
-            if (daftarLaundry.get(i).getNamaPelanggan().equalsIgnoreCase(nama)) {
-                daftarLaundry.get(i).tampilkanInfo();
-                ditemukan = true;
-            }
-        }
-        if (!ditemukan) {
-            System.out.println("-> [INFO] Data laundry tidak ditemukan.");
-        }
-    }
-
-    public static void cariLaundry(String status, ArrayList<Laundry> daftarLaundry, boolean berdasarkanStatus) throws DataTidakValidException {
-        if (status == null || status.trim().isEmpty()) {
-            throw new DataTidakValidException("Status pencarian tidak boleh kosong.");
-        }
-        System.out.println("Mencari laundry dengan Status: " + status);
-        boolean ditemukan = false;
-        for (int i = 0; i < daftarLaundry.size(); i++) {
-            if (berdasarkanStatus && daftarLaundry.get(i).getStatus().equalsIgnoreCase(status)) {
-                daftarLaundry.get(i).tampilkanInfo();
-                ditemukan = true;
-            }
-        }
-        if (!ditemukan) {
-            System.out.println("-> [INFO] Data laundry tidak ditemukan.");
-        }
-    }
 
     public static void prosesLaundry(Laundry item) {
         item.aksiLaundry();
@@ -63,20 +27,20 @@ public class SistemLaundry {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        ArrayList<Laundry> daftarLaundry = new ArrayList<>();
-        HashMap<String, String> dataPelanggan = new HashMap<>();
+        ManajemenOutletLaundry outletUnila = new ManajemenOutletLaundry("Outlet Laundry Unila");
+        outletUnila.bukaOutlet();
         boolean isRunning = true;
 
         try {
-            daftarLaundry.add(new LaundryKiloan("Andi", "081234567890", 3.0, "Diproses", "Reguler", 7000));
-            daftarLaundry.add(new LaundrySatuan("Budi", "082345678901", 0.5, "Selesai", "Jas", 1, 25000));
-            daftarLaundry.add(new LaundryDryCleaning("Citra", "083456789012", 2.0, "Diproses", "Dry Cleaning", 30000));
-            daftarLaundry.add(new LaundryKiloan("Dewi", "084567890123", 5.0, "Diambil", "Express", 10000));
-            daftarLaundry.add(new LaundrySatuan("Eko", "085678901234", 1.0, "Diproses", "Selimut", 2, 20000));
+            outletUnila.tambahLaundry(new LaundryKiloan("Andi", "081234567890", 3.0, "Diproses", "Reguler", 7000));
+            outletUnila.tambahLaundry(new LaundrySatuan("Budi", "082345678901", 0.5, "Selesai", "Jas", 1, 25000));
+            outletUnila.tambahLaundry(new LaundryDryCleaning("Citra", "083456789012", 2.0, "Diproses", "Dry Cleaning", 30000));
+            outletUnila.tambahLaundry(new LaundryKiloan("Dewi", "084567890123", 5.0, "Diambil", "Express", 10000));
+            outletUnila.tambahLaundry(new LaundrySatuan("Eko", "085678901234", 1.0, "Diproses", "Selimut", 2, 20000));
 
-            dataPelanggan.put("P001", "Andi");
-            dataPelanggan.put("P002", "Budi");
-            dataPelanggan.put("P003", "Citra");
+            outletUnila.tambahPelanggan(new Pelanggan("P001", "Andi", "081234567890"));
+            outletUnila.tambahPelanggan(new Pelanggan("P002", "Budi", "082345678901"));
+            outletUnila.tambahPelanggan(new Pelanggan("P003", "Citra", "083456789012"));
 
         } catch (DataTidakValidException e) {
             System.out.println("Gagal memuat data awal: " + e.getMessage());
@@ -91,8 +55,8 @@ public class SistemLaundry {
             System.out.println("1. Tambah Data Laundry");
             System.out.println("2. Tampilkan Seluruh Data");
             System.out.println("3. Pencarian / Aksi Khusus");
-            System.out.println("4. Manajemen Pelanggan (Demo HashMap)");
-            System.out.println("5. Simulasi Proses");
+            System.out.println("4. Manajemen Pelanggan (Agregasi)");
+            System.out.println("5. Simulasi Transaksi (Asosiasi)");
             System.out.println("6. Aksi Interface (Antar & Rating)");
             System.out.println("7. Keluar");
             System.out.println("--------------------------------------------------------------");
@@ -135,7 +99,7 @@ public class SistemLaundry {
                                 double hargaKg = scanner.nextDouble();
                                 scanner.nextLine();
 
-                                daftarLaundry.add(new LaundryKiloan(nama, telepon, berat, status, layanan, hargaKg));
+                                outletUnila.tambahLaundry(new LaundryKiloan(nama, telepon, berat, status, layanan, hargaKg));
                                 System.out.println("Data laundry kiloan berhasil ditambahkan.");
 
                             } else if (jenis == 2) {
@@ -150,7 +114,7 @@ public class SistemLaundry {
                                 double hargaItem = scanner.nextDouble();
                                 scanner.nextLine();
 
-                                daftarLaundry.add(new LaundrySatuan(nama, telepon, 0, status, barang, jumlahBarang, hargaItem));
+                                outletUnila.tambahLaundry(new LaundrySatuan(nama, telepon, 0, status, barang, jumlahBarang, hargaItem));
                                 System.out.println("Data laundry satuan berhasil ditambahkan.");
 
                             } else if (jenis == 3) {
@@ -161,7 +125,7 @@ public class SistemLaundry {
                                 double harga = scanner.nextDouble();
                                 scanner.nextLine();
 
-                                daftarLaundry.add(new LaundryDryCleaning(nama, telepon, 0.0, status, jenisPakaian, harga));
+                                outletUnila.tambahLaundry(new LaundryDryCleaning(nama, telepon, 0.0, status, jenisPakaian, harga));
                                 System.out.println("Data laundry dry cleaning berhasil ditambahkan.");
                             } else {
                                 System.out.println("Jenis laundry tidak valid. Data tidak ditambahkan.");
@@ -175,75 +139,20 @@ public class SistemLaundry {
 
                     case 2 -> {
                         System.out.println("\n================ DAFTAR SELURUH LAUNDRY ================");
-
-                        if (daftarLaundry.isEmpty()) {
-                            System.out.println("Belum ada data laundry yang tersimpan");
-                        } else {
-                            for (int i = 0; i < daftarLaundry.size(); i++) {
-                                System.out.print((i + 1) + ". ");
-                                daftarLaundry.get(i).tampilkanInfo();
-                                daftarLaundry.get(i).aksiLaundry();
-                                daftarLaundry.get(i).hitungEstimasiSelesai();
-
-                                if (daftarLaundry.get(i) instanceof DapatDiantar) {
-                                    DapatDiantar itemAntar = (DapatDiantar) daftarLaundry.get(i);
-                                    itemAntar.prosesAntar();
-                                }
-                                if (daftarLaundry.get(i) instanceof DapatDinilai) {
-                                    DapatDinilai itemBisaDinilai = (DapatDinilai) daftarLaundry.get(i);
-                                    if (itemBisaDinilai.getRating() == 0) {
-                                        System.out.println("-> [RATING] Belum ada rating dari pelanggan.");
-                                    } else {
-                                        System.out.println("-> [RATING] Rating pelanggan: " + itemBisaDinilai.getRating() + "/5 Bintang.");
-                                    }
-                                }
-                                System.out.println();
-                            }
-                            System.out.println("----------------------------------------------------------");
-                            System.out.println("Total objek laundry berhasil dibuat: " + Laundry.getTotalLaundryBerhasilDibuat());
-                        }
+                        outletUnila.lihatSemuaLaundry();
+                        System.out.println("----------------------------------------------------------");
+                        System.out.println("Total objek laundry berhasil dibuat: " + Laundry.getTotalLaundryBerhasilDibuat());
                     }
 
                     case 3 -> {
-                        System.out.println("\n------------- PENCARIAN / AKSI KHUSUS ----------------");
-                        System.out.println("1. Cari berdasarkan nama pelanggan");
-                        System.out.println("2. Cari berdasarkan status");
-                        System.out.println("3. Tampilkan cara/aksi proses berdasarkan tipe");
-
-                        System.out.print("Pilih (1-3): ");
-                        try {
-                            int mode = Integer.parseInt(scanner.nextLine());
-                            if (mode == 1) {
-                                System.out.print("Masukkan nama pelanggan: ");
-                                String kataKunci = scanner.nextLine();
-                                cariLaundry(kataKunci, daftarLaundry);
-
-                            } else if (mode == 2) {
-                                System.out.print("Masukkan status: ");
-                                String statusCari = scanner.nextLine();
-                                cariLaundry(statusCari, daftarLaundry, true);
-
-                            } else if (mode == 3) {
-                                if (daftarLaundry.isEmpty()) {
-                                    System.out.println("Belum ada data laundry.");
-                                } else {
-                                    for (int i = 0; i < daftarLaundry.size(); i++) {
-                                        System.out.printf("%2d. %s%n", i + 1, daftarLaundry.get(i).getNamaPelanggan());
-                                        daftarLaundry.get(i).aksiLaundry();
-                                    }
-                                }
-                            } else {
-                                System.out.println("Pilihan pencarian tidak valid.");
-                            }
-                        } catch (DataTidakValidException e) {
-                            System.out.println("-> [ERROR PENCARIAN] " + e.getMessage());
-                        } finally {
-                            System.out.println("-> [FINALLY] Proses pencarian selesai.");
+                        System.out.println("\n------------- PENCARIAN LAUNDRY ----------------");
+                        System.out.print("Masukkan nama pelanggan: ");
+                        String kataKunci = scanner.nextLine();
+                        outletUnila.cariLaundry(kataKunci);
                         }
-                    }
 
                     case 4 -> {
-                        System.out.println("\n--- Kelola Pelanggan (HashMap) ---");
+                        System.out.println("\n--- Kelola Pelanggan (Agregasi) ---");
                         System.out.println("1. Tambah Pelanggan Baru");
                         System.out.println("2. Cari Pelanggan via ID");
                         System.out.println("3. Tampilkan Semua Pelanggan");
@@ -253,60 +162,65 @@ public class SistemLaundry {
                         scanner.nextLine();
 
                         if (menuPelanggan == 1) {
-                            System.out.print("Masukkan ID (sebagai key): ");
-                            String idPelanggan = scanner.nextLine();
-                            System.out.print("Masukkan Nama Lengkap (sebagai value): ");
-                            String namaPelanggan = scanner.nextLine();
+                            System.out.print("Masukkan ID Pelanggan: ");
+                            String id = scanner.nextLine();
+                            System.out.print("Masukkan Nama: ");
+                            String nama = scanner.nextLine();
+                            System.out.print("Masukkan No Telepon: ");
+                            String telp = scanner.nextLine();
 
-                            dataPelanggan.put(idPelanggan, namaPelanggan);
-                            System.out.println("Berhasil menambahkan pelanggan!");
-
+                            outletUnila.tambahPelanggan(new Pelanggan(id, nama, telp));
                         } else if (menuPelanggan == 2) {
-                            System.out.print("Masukkan ID yang di cari: ");
-                            String searchId = scanner.nextLine();
-
-                            if (dataPelanggan.containsKey(searchId)) {
-                                System.out.println("Nama Pelanggan: " + dataPelanggan.get(searchId));
-                            } else {
-                                System.out.println("Pelanggan dengan ID tersebut tidak terdaftar.");
-                            }
-
+                            System.out.print("Masukkan ID yang dicari: ");
+                            outletUnila.cariPelanggan(scanner.nextLine());
                         } else if (menuPelanggan == 3) {
-                            System.out.println("Total Pelanggan Terdaftar: " + dataPelanggan.size());
-                            for (String keyId : dataPelanggan.keySet()) {
-                                System.out.println("ID: " + keyId + " | Nama: " + dataPelanggan.get(keyId));
-                            }
+                            outletUnila.lihatSemuaPelanggan();
                         } else {
                             System.out.println("Pilihan tidak valid.");
                         }
                     }
 
                     case 5 -> {
-                        System.out.println("Simulasi Proses Laundry");
-                        if (daftarLaundry.isEmpty()) {
-                            System.out.println("Belum ada data laundry yang tersimpan.");
+                        System.out.println("\n--- Simulasi Transaksi (Asosiasi) ---");
+                        System.out.print("Masukkan ID Pelanggan: ");
+                        String inputId = scanner.nextLine();
+
+                        Pelanggan pelanggan = outletUnila.getPelanggan(inputId);
+
+                        if (pelanggan == null) {
+                            System.out.println("-> [GAGAL] Pelanggan dengan ID tersebut belum terdaftar!");
+                        } else if (outletUnila.getJumlahLaundry() == 0) {
+                            System.out.println("-> [GAGAL] Belum ada data laundry yang tersedia di outlet.");
                         } else {
-                            for (int i = 0; i < daftarLaundry.size(); i++) {
-                                System.out.println("Proses laundry ke-" + (i + 1));
-                                prosesLaundry(daftarLaundry.get(i));
+                            outletUnila.lihatSemuaLaundry();
+                            System.out.print("Pilih Nomor Laundry yang ingin diproses: ");
+                            int noLaundry = scanner.nextInt() - 1;
+                            scanner.nextLine();
+
+                            if (noLaundry >= 0 && noLaundry < outletUnila.getJumlahLaundry()) {
+                                Laundry itemLaundry = outletUnila.getLaundryInt(noLaundry);
+                                TransaksiLaundry.prosesTransaksi(pelanggan, itemLaundry);
+                            } else {
+                                System.out.println("-> [GAGAL] Nomor urut laundry tidak valid!");
                             }
                         }
                     }
                     
                     case 6 -> {
                         System.out.println("\n--- Aksi Interface: Antar & Rating ---");
-                        if (daftarLaundry.isEmpty()) {
+                        if (outletUnila.getJumlahLaundry() == 0) {
                             System.out.println("Belum ada data laundry yang tersimpan.");
                         } else {
                             System.out.print("Masukkan nama pelanggan: ");
                             String namaCari = scanner.nextLine().trim();
 
                             boolean ditemukan = false;
-                            for (int i = 0; i < daftarLaundry.size(); i++) {
-                                if (daftarLaundry.get(i).getNamaPelanggan().equalsIgnoreCase(namaCari)) {
+                            for (int i = 0; i < outletUnila.getJumlahLaundry(); i++) {
+                                Laundry item = outletUnila.getLaundryInt(i);
+                                if (item.getNamaPelanggan().equalsIgnoreCase(namaCari)) {
                                     ditemukan = true;
-                                    System.out.println("Data ditemukan: " + daftarLaundry.get(i).getNamaPelanggan()
-                                            + " (" + daftarLaundry.get(i).getClass().getSimpleName() + ")");
+                                    System.out.println("Data ditemukan: " + item.getNamaPelanggan()
+                                            + " (" + item.getClass().getSimpleName() + ")");
 
                                     int bintang = 0;
                                     boolean ratingValid = false;
@@ -324,7 +238,7 @@ public class SistemLaundry {
                                         }
                                     }
 
-                                    jalankanAksiInterface(daftarLaundry.get(i), bintang);
+                                    jalankanAksiInterface(item, bintang);
                                 }
                             }
 
