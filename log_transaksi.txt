@@ -1,0 +1,3 @@
+Pelanggan: Andi (P001) | Berat: 3.0 kg | Status: Diproses
+Pelanggan: Budi (P002) | Berat: 0.5 kg | Status: Selesai
+Pelanggan: Andi (P001) | Berat: 3.0 kg | Status: Diproses

@@ -31,23 +31,39 @@ public class SistemLaundry {
         outletUnila.bukaOutlet();
         boolean isRunning = true;
 
-        try {
-            outletUnila.tambahLaundry(new LaundryKiloan("Andi", "081234567890", 3.0, "Diproses", "Reguler", 7000));
-            outletUnila.tambahLaundry(new LaundrySatuan("Budi", "082345678901", 0.5, "Selesai", "Jas", 1, 25000));
-            outletUnila.tambahLaundry(new LaundryDryCleaning("Citra", "083456789012", 2.0, "Diproses", "Dry Cleaning", 30000));
-            outletUnila.tambahLaundry(new LaundryKiloan("Dewi", "084567890123", 5.0, "Diambil", "Express", 10000));
-            outletUnila.tambahLaundry(new LaundrySatuan("Eko", "085678901234", 1.0, "Diproses", "Selimut", 2, 20000));
+        outletUnila.muatDataDariFile();
 
-            outletUnila.tambahPelanggan(new Pelanggan("P001", "Andi", "081234567890"));
-            outletUnila.tambahPelanggan(new Pelanggan("P002", "Budi", "082345678901"));
-            outletUnila.tambahPelanggan(new Pelanggan("P003", "Citra", "083456789012"));
+        if (outletUnila.getJumlahLaundry() == 0) {
+            try {
+                Pelanggan p1 = new Pelanggan("P001", "Andi", "081234567890");
+                Pelanggan p2 = new Pelanggan("P002", "Budi", "082345678901");
+                Pelanggan p3 = new Pelanggan("P003", "Citra", "083456789012");
+                outletUnila.tambahPelanggan(p1);
+                outletUnila.tambahPelanggan(p2);
+                outletUnila.tambahPelanggan(p3);
 
-        } catch (DataTidakValidException e) {
-            System.out.println("Gagal memuat data awal: " + e.getMessage());
+                Laundry l1 = new LaundryKiloan("Andi", "081234567890", 3.0, "Diproses", "Reguler", 7000);
+                Laundry l2 = new LaundrySatuan("Budi", "082345678901", 0.5, "Selesai", "Jas", 1, 25000);
+                Laundry l3 = new LaundryDryCleaning("Citra", "083456789012", 2.0, "Diproses", "Dry Cleaning", 30000);
+                Laundry l4 = new LaundryKiloan("Dewi", "084567890123", 5.0, "Diambil", "Express", 10000);
+                Laundry l5 = new LaundrySatuan("Eko", "085678901234", 1.0, "Diproses", "Selimut", 2, 20000);
+
+                outletUnila.tambahLaundry(l1);
+                outletUnila.tambahLaundry(l2);
+                outletUnila.tambahLaundry(l3);
+                outletUnila.tambahLaundry(l4);
+                outletUnila.tambahLaundry(l5);
+
+                TransaksiLaundry.prosesTransaksi(p1, l1);
+                TransaksiLaundry.prosesTransaksi(p2, l2);
+
+            } catch (DataTidakValidException e) {
+                System.out.println("Gagal memuat data awal: " + e.getMessage());
+            }
         }
         
         System.out.println("==============================================================");
-        System.out.println("             SISTEM MANAJEMEN LAUNDRY                        ");
+        System.out.println("            SISTEM MANAJEMEN LAUNDRY                          ");
         System.out.println("==============================================================");
 
         while (isRunning) {
@@ -56,11 +72,12 @@ public class SistemLaundry {
             System.out.println("2. Tampilkan Seluruh Data");
             System.out.println("3. Pencarian / Aksi Khusus");
             System.out.println("4. Manajemen Pelanggan (Agregasi)");
-            System.out.println("5. Simulasi Transaksi (Asosiasi)");
+            System.out.println("5. Simulasi Transaksi (Asosiasi & File I/O Write)");
             System.out.println("6. Aksi Interface (Antar & Rating)");
-            System.out.println("7. Keluar");
+            System.out.println("7. Baca File Log Transaksi (Demo File I/O Read)");
+            System.out.println("8. Keluar (Simpan Data / Serialization)");
             System.out.println("--------------------------------------------------------------");
-            System.out.print("Pilih Menu: 1-7: ");
+            System.out.print("Pilih Menu: 1-8: ");
 
             try {
                 int pilihan = scanner.nextInt();
@@ -149,7 +166,7 @@ public class SistemLaundry {
                         System.out.print("Masukkan nama pelanggan: ");
                         String kataKunci = scanner.nextLine();
                         outletUnila.cariLaundry(kataKunci);
-                        }
+                    }
 
                     case 4 -> {
                         System.out.println("\n--- Kelola Pelanggan (Agregasi) ---");
@@ -247,14 +264,22 @@ public class SistemLaundry {
                             }
                         }
                     }
-                    
+
                     case 7 -> {
+                        // DEMO MEMBACA FILE TEKS (File I/O Read)[cite: 24, 26]
+                        outletUnila.bacaLogTransaksi();
+                    }
+                    
+                    case 8 -> {
+                        // DEMO SERIALIZATION: Membekukan seluruh data memori ke file sebelum keluar[cite: 26]
+                        System.out.println("Menyimpan sesi data ke file (Serialization)...");
+                        outletUnila.simpanDataKeFile();
                         System.out.println("Terima kasih telah menggunakan Sistem Laundry!");
                         isRunning = false;
                     }
 
                     default -> {
-                        System.out.println("Menu tidak tersedia. Silakan pilih 1-7.");
+                        System.out.println("Menu tidak tersedia. Silakan pilih 1-8.");
                     }
                 }
             } catch (InputMismatchException e) {

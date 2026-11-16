@@ -1,7 +1,9 @@
 package com.mycompany.sistemlaundry;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class ManajemenOutletLaundry {
     private String namaOutlet;
@@ -41,8 +43,8 @@ public class ManajemenOutletLaundry {
             daftarLaundry.get(i).tampilkanInfo();
         }
     }
-    
-    public static void cariLaundry(String nama, ArrayList<Laundry> daftarLaundry) throws DataTidakValidException {
+
+   public void cariLaundry(String nama) throws DataTidakValidException {
         if (nama == null || nama.trim().isEmpty()) {
             throw new DataTidakValidException("Kata kunci pencarian nama tidak boleh kosong.");
         }
@@ -57,6 +59,10 @@ public class ManajemenOutletLaundry {
         if (!ditemukan) {
             System.out.println("-> [INFO] Data laundry tidak ditemukan.");
         }
+    } 
+
+    public ArrayList<Laundry> getDaftarLaundry() {
+        return daftarLaundry;
     }
 
     public void cariPelanggan(String idPelanggan) {
@@ -86,7 +92,60 @@ public class ManajemenOutletLaundry {
         return daftarLaundry.size();
     }
 
-    void cariLaundry(String kataKunci) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    public void simpanDataKeFile() {
+        try {
+            FileOutputStream fileKeluar = new FileOutputStream("data_laundry.dat");
+            ObjectOutputStream mesinPembeku = new ObjectOutputStream(fileKeluar);
+
+            mesinPembeku.writeObject(this.daftarLaundry);
+            mesinPembeku.writeObject(this.dataPelanggan);
+
+            mesinPembeku.close();
+            System.out.println("-> [SYSTEM LOG] Seluruh data berhasil disimpan (Serialization) ke dalam Harddisk!");
+        } catch (Exception e) {
+            System.out.println("-> [SYSTEM ERROR] Gagal menyimpan data: " + e.getMessage());
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public void muatDataDariFile() {
+        try {
+            File cekFile = new File("data_laundry.dat");
+            if (!cekFile.exists()) {
+                System.out.println("-> [SYSTEM INFO] File data_laundry.dat belum ditemukan (sesi baru).");
+                return;
+            }
+
+            FileInputStream fileMasuk = new FileInputStream(cekFile);
+            ObjectInputStream mesinPembangkit = new ObjectInputStream(fileMasuk);
+
+            this.daftarLaundry = (ArrayList<Laundry>) mesinPembangkit.readObject();
+            this.dataPelanggan = (HashMap<String, Pelanggan>) mesinPembangkit.readObject();
+
+            Laundry.totalLaundryBerhasilDibuat = this.daftarLaundry.size();
+
+            mesinPembangkit.close();
+            System.out.println("-> [SYSTEM LOG] Data sistem berhasil dimuat ulang dari penyimpanan (" + daftarLaundry.size() + " data laundry).");
+        } catch (Exception e) {
+            System.out.println("-> [SYSTEM ERROR] Gagal memuat data: " + e.getMessage());
+        }
+    }
+
+    public void bacaLogTransaksi() {
+        System.out.println("\n--- Riwayat Log Transaksi ---");
+        try {
+            File fileLog = new File("log_transaksi.txt");
+            if (!fileLog.exists()) {
+                System.out.println("Belum ada log transaksi laundry.");
+                return;
+            }
+            Scanner mesinBaca = new Scanner(fileLog);
+            while (mesinBaca.hasNextLine()) {
+                System.out.println(mesinBaca.nextLine());
+            }
+            mesinBaca.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Gagal membuka file log.");
+        }
     }
 }

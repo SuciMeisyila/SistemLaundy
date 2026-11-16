@@ -4,11 +4,13 @@
  */
 package com.mycompany.sistemlaundry;
 
+import java.io.Serializable;
 /**
  *
  * @author ASUS
  */
-public class Pelanggan {
+public class Pelanggan implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String idPelanggan;
     private String nama;
     private String noTelepon;

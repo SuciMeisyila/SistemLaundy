@@ -4,17 +4,19 @@
  */
 package com.mycompany.sistemlaundry;
 
+import java.io.Serializable;
 /**
  *
  * @author ASUS
  */
-public abstract class Laundry {
+public abstract class Laundry implements Serializable{
+    private static final long serialVersionUID = 1L;
     private String namaPelanggan;
     private String noTelepon;
     private double beratKg;
     private String status;
 
-    private static int totalLaundryBerhasilDibuat = 0;
+    static int totalLaundryBerhasilDibuat = 0;
 
     public Laundry(String namaPelanggan, String noTelepon, double beratKg, String status) throws DataTidakValidException {
         setNamaPelanggan(namaPelanggan);
