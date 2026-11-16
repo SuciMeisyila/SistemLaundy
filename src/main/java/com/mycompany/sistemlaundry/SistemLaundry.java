@@ -266,12 +266,10 @@ public class SistemLaundry {
                     }
 
                     case 7 -> {
-                        // DEMO MEMBACA FILE TEKS (File I/O Read)[cite: 24, 26]
                         outletUnila.bacaLogTransaksi();
                     }
                     
                     case 8 -> {
-                        // DEMO SERIALIZATION: Membekukan seluruh data memori ke file sebelum keluar[cite: 26]
                         System.out.println("Menyimpan sesi data ke file (Serialization)...");
                         outletUnila.simpanDataKeFile();
                         System.out.println("Terima kasih telah menggunakan Sistem Laundry!");
